@@ -1,10 +1,26 @@
+import { Routes, Route, Navigate } from "react-router-dom";
+import Home from "./pages/home/Home";
+import Login from "./pages/login/Login";
+import SignUp from "./pages/signup/SignUp";
+import { useAuthStore } from "./zustand/useAuthStore";
+
 function App() {
+  // 1. Ambil status pengguna dari memori global (Zustand)
+  const { authUser } = useAuthStore();
+
   return (
-    <div className="bg-deep-blue min-h-screen flex items-center justify-center">
-      <h1 className="text-crisp-white text-3xl font-bold">
-        Project Chat <span className="text-pastel-green">Berjalan! HOREE</span>
-      </h1>
-    </div>
+    <>
+      <Routes>
+        {/* 2. Jika sudah login, buka Home. Jika belum, lempar ke Login */}
+        <Route path="/" element={authUser ? <Home /> : <Navigate to="/login" />} />
+
+        {/* 3. Jika sudah login, lempar ke Home. Jika belum, buka Login */}
+        <Route path="/login" element={authUser ? <Navigate to="/" /> : <Login />} />
+
+        {/* 4. Jika sudah login, lempar ke Home. Jika belum, buka SignUp */}
+        <Route path="/signup" element={authUser ? <Navigate to="/" /> : <SignUp />} />
+      </Routes>
+    </>
   );
 }
 
