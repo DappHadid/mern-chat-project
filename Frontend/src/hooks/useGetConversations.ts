@@ -1,0 +1,30 @@
+import { useEffect, useState } from "react";
+
+const useGetConversations = () => {
+  const [loading, setLoading] = useState(false);
+  const [conversations, setConversations] = useState([]);
+
+  useEffect(() => {
+    const getConversations = async () => {
+      setLoading(true);
+      try {
+        // Mengambil data pengguna dari jalur API backend Anda
+        const res = await fetch("/api/users");
+        const data = await res.json();
+
+        if (data.error) throw new Error(data.error);
+        setConversations(data);
+      } catch (error: any) {
+        console.error("Gagal mengambil kontak:", error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getConversations();
+  }, []);
+
+  return { loading, conversations };
+};
+
+export default useGetConversations;
